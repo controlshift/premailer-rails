@@ -139,15 +139,13 @@ end
 Note that the mere presence of this header causes premailer to be skipped, i.e.,
 even setting `skip_premailer: false` will cause premailer to be skipped. The
 reason for that is that the `skip_premailer` is a simple header and the value is
-transformed into a string, causing `'false'` to become truethy.
+transformed into a string, causing `'false'` to become truthy.
 
 ## Small Print
 
 ### Author
 
 Philipe Fatio ([@fphilipe][fphilipe twitter])
-
-[![Support via Gittip][tip-image]][tip-link]
 
 ### License
 

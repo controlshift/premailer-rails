@@ -1,9 +1,24 @@
 # Changelog
 
+## v1.9.2
+
+- Update rails dependency to allow rails 5
+
+## v1.9.1
+
+- Respect data-premailer="ignore" on link tags
+- Ensure content-transfer-encoding is maintained
+
+## v1.9.0
+
+- Improved CSS loading and caching.
+- Fixed incompatibility with newer rails and sprockets versions.
+
 ## v1.8.2
 
 - `Premailer::Rails::CSSLoaders::NetworkLoader` is more resilient and works even
   if the Rails asset host is set without a URI scheme. (panthomakos)
+- Remove stylesheet links from the HTML that have been processed.
 
 ## v1.8.1
 

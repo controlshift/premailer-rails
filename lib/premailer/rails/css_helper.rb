@@ -3,8 +3,7 @@ class Premailer
     module CSSHelper
       extend self
 
-      @cache = {}
-      attr :cache
+      FileNotFound = Class.new(StandardError)
 
       STRATEGIES = [
         CSSLoaders::CacheLoader,
@@ -15,24 +14,31 @@ class Premailer
 
       # Returns all linked CSS files concatenated as string.
       def css_for_doc(doc)
-        urls = css_urls_in_doc(doc)
-        urls.map { |url| load_css(url).force_encoding('UTF-8') }.join("\n")
+        css_urls_in_doc(doc).map { |url| css_for_url(url) }.join("\n")
+      end
+
+      def css_for_url(url)
+        load_css(url).tap do |content|
+          CSSLoaders::CacheLoader.store(url, content)
+        end
       end
 
       private
 
       def css_urls_in_doc(doc)
-        doc.search('link[@rel="stylesheet"]').map do |link|
+        doc.search('link[@rel="stylesheet"]:not([@data-premailer="ignore"])').map do |link|
+          link.remove
           link.attributes['href'].to_s
         end
       end
 
       def load_css(url)
-        @cache[url] =
-          STRATEGIES.each do |strategy|
-            css = strategy.load(url)
-            break css if css
-          end
+        STRATEGIES.each do |strategy|
+          css = strategy.load(url)
+          return css.force_encoding('UTF-8') if css
+        end
+
+        raise FileNotFound, %{File with URL "#{url}" could not be loaded by any strategy.}
       end
     end
   end
