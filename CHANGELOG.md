@@ -1,5 +1,29 @@
 # Changelog
 
+## v1.9.7
+
+- Use `Rails.root` in `FileSystemLoader` (@stanhu, #195)
+
+## v1.9.6
+
+- Handle `relative_url_root` in when loading CSS from file system
+
+## v1.9.5
+
+- Mention license in gemspec
+
+## v1.9.4
+
+- Improve check for Rails module
+- Preserve body encoding to prevent garbled mails
+
+## v1.9.3
+
+- Add support for rails' `relative_url_root` config
+- Fix link tag removal under Hpricot
+- Pass url to `asset_host` if it responds to `call`
+- Fixed issue where urls may conflict with folder names.
+
 ## v1.9.2
 
 - Update rails dependency to allow rails 5

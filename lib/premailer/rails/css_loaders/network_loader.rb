@@ -16,7 +16,7 @@ class Premailer
             return uri if uri.scheme.present?
             URI("http://#{uri.to_s}")
           elsif asset_host_present?
-            scheme, host = asset_host.split(%r{:?//})
+            scheme, host = asset_host(url).split(%r{:?//})
             scheme, host = host, scheme if host.nil?
             scheme = 'http' if scheme.blank?
             path = url
@@ -25,12 +25,13 @@ class Premailer
         end
 
         def asset_host_present?
-          ::Rails.configuration.action_controller.asset_host.present?
+          ::Rails.respond_to?(:configuration) &&
+            ::Rails.configuration.action_controller.asset_host.present?
         end
 
-        def asset_host
+        def asset_host(url)
           config = ::Rails.configuration.action_controller.asset_host
-          config.respond_to?(:call) ? config.call : config
+          config.respond_to?(:call) ? config.call(url) : config
         end
       end
     end

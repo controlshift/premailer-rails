@@ -61,7 +61,7 @@ their order are as follows:
     requesting it from the asset pipeline.
 
 4.  **Network:** As a last resort, the URL is simply requested and the response
-    body is used. This is usefull when the assets are not bundled in the
+    body is used. This is useful when the assets are not bundled in the
     application and only available on a CDN. On Heroku e.g. you can add assets
     to your `.slugignore` causing your assets to not be available to the app
     (and thus resulting in a smaller app) and deploy the assets to a CDN such
@@ -87,7 +87,8 @@ gem 'hpricot'
 
 If both gems are loaded for some reason, premailer chooses hpricot.
 
-That's it!
+You can also explicitly configure the apapter as documented
+[here](https://github.com/premailer/premailer#adapters).
 
 ## Configuration
 
@@ -121,6 +122,11 @@ If you're using this gem outside of Rails, you'll need to call
 is done ideally in some kind of initializer, depending on the framework you're
 using.
 
+premailer-rails reads all stylesheet `<link>` tags, inlines the linked CSS
+and removes the tags. If you wish to ignore a certain tag, e.g. one that links to
+external fonts such as Google Fonts, you can add a `data-premailer="ignore"`
+attribute.
+
 ## Usage
 
 premailer-rails processes all outgoing emails by default. If you wish to skip
@@ -140,6 +146,18 @@ Note that the mere presence of this header causes premailer to be skipped, i.e.,
 even setting `skip_premailer: false` will cause premailer to be skipped. The
 reason for that is that the `skip_premailer` is a simple header and the value is
 transformed into a string, causing `'false'` to become truthy.
+
+Emails are only processed upon delivery, i.e. when calling `#deliver` on the
+email, or when [previewing them in
+rails](http://api.rubyonrails.org/v4.1.0/classes/ActionMailer/Base.html#class-ActionMailer::Base-label-Previewing+emails).
+If you wish to manually trigger the inlining, you can do so by calling the hook:
+
+```ruby
+mail = SomeMailer.some_message(args)
+Premailer::Rails::Hook.perform(mail)
+```
+
+This will modify the email in place, useful e.g. in tests.
 
 ## Small Print
 
