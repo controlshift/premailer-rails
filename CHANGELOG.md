@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.11.1
+
+- Check if `Rails.application` is defined (@pabloh, #250)
+
+## v1.11.0
+
+- Remove `force_encoding!`
+
+## v1.10.3
+
+- Remove upper version constraint for actionmailer
+
 ## v1.10.2
 
 - Explicitly check for assets_manifest (@derekwheel, #214)

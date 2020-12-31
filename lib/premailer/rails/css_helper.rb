@@ -39,13 +39,13 @@ class Premailer
       end
 
       def cache_enabled?
-        defined?(::Rails) && ::Rails.env.production?
+        defined?(::Rails.env) && ::Rails.env.production?
       end
 
       def load_css(url)
         Premailer::Rails.config.fetch(:strategies).each do |strategy|
           css = find_strategy(strategy).load(url)
-          return css.force_encoding('UTF-8') if css
+          return css if css
         end
 
         raise FileNotFound, %{File with URL "#{url}" could not be loaded by any strategy.}

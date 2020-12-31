@@ -13,11 +13,11 @@ class Premailer
         end
 
         def file_name(url)
-          prefix = [
-            ::Rails.configuration.relative_url_root,
-            ::Rails.configuration.assets.prefix,
+          prefix = File.join(
+            ::Rails.configuration.relative_url_root.to_s,
+            ::Rails.configuration.assets.prefix.to_s,
             '/'
-          ].join
+          )
           URI(url).path
             .sub(/\A#{prefix}/, '')
             .sub(/-(\h{32}|\h{64})\.css\z/, '.css')
@@ -25,6 +25,7 @@ class Premailer
 
         def asset_pipeline_present?
           defined?(::Rails) &&
+            ::Rails.respond_to?(:application) &&
             ::Rails.application &&
             ::Rails.application.respond_to?(:assets_manifest) &&
             ::Rails.application.assets_manifest
